@@ -5,24 +5,26 @@
  */
 package POGO;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
  * @author mehdi
  */
-public class Group {
+public class Group implements Serializable {
 
     private int groupId;
     private String groupName;
     private GroupManager groupManager;
     private List<GroupMember> members;
 
-    public Group(int groupId, String groupName, GroupManager groupMan) {
+    public Group(int groupId, String groupName, GroupManager gm) {
         this.groupId = groupId;
         this.groupName = groupName;
-        this.groupManager = groupMan;
+        this.groupManager = gm;
         members = new ArrayList<GroupMember>();
     }
 
@@ -38,7 +40,8 @@ public class Group {
             }
         }
     }
-    public List<GroupMember> getGroupMem(){
+
+    public List<GroupMember> getGroupMem() {
         return this.members;
     }
 
@@ -66,5 +69,19 @@ public class Group {
         this.groupManager = groupManager;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }

@@ -5,23 +5,29 @@
  */
 package POGO;
 
+import java.io.Serializable;
+
 /**
  *
  * @author mehdi
  */
-public class GroupManager extends User {
+public class GroupManager extends GroupMember implements Serializable {
 
     private int groupId;
-    private Group group;
+    private GroupMember groupMem;
 
     public GroupManager(int userId, String userName, String password, Group group) {
         super(userId, userName, password);
-        this.group = group;
-
+        
     }
+
+    public GroupManager( GroupMember user) {
+        super(user);
+    }
+    
 //    public GroupManager(User user)
 
-    public void givePermission(GroupMember gm, byte permis) {
+   /* public void givePermission(GroupMember gm, byte permis) {
         for (GroupMember groupMem : this.group.getGroupMem()) {
             groupMem.changePermission(permis);
         }
@@ -30,13 +36,14 @@ public class GroupManager extends User {
     public void addMem(GroupMember groupMem) {
         this.group.getGroupMem().add(groupMem);
     }
-
-    public void removeMem(GroupMember groupMem) {
+*/
+    public void removeMem(GroupMember groupMem, Group group) {
         for (GroupMember gm : group.getGroupMem()) {
             if (gm.equals(groupMem)) {
-                this.group.getGroupMem().remove(groupMem);
+                group.getGroupMem().remove(groupMem);
                 break;
             }
         }
     }
+
 }

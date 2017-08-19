@@ -35,20 +35,55 @@ public class ReadWriteObjectsFile {
         }
     }
 
-    public List<Object> readFile(String fileName) {
-        List<Object> obj = null;
+    public List<? extends Object> readFile(String fileName) {
+        List<? extends Object> obj = null;
         try {
             FileInputStream fi = new FileInputStream(new File(fileName));
             ObjectInputStream oi = new ObjectInputStream(fi);
 
             // Read objects
-            obj = (List<Object>) oi.readObject();
+            obj = (List<? extends Object>) oi.readObject();
+
+            oi.close();
+            fi.close();
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found");
+        }
+        catch (IOException e) {
+            System.out.println("File read error" + e);
+        }
+        return obj;
+    }
+
+    public void writeFile( Object obj, String fileName) {
+
+        try {
+            FileOutputStream f = new FileOutputStream(new File(fileName));
+            ObjectOutputStream o = new ObjectOutputStream(f);
+
+            // Write objects to file
+            o.writeObject(obj);
+            o.close();
+            f.close();
+        } catch (IOException e) {
+            System.out.println("File write error");
+        }
+    }
+
+    public Object readFileObject(String fileName) {
+         Object obj = null;
+        try {
+            FileInputStream fi = new FileInputStream(new File(fileName));
+            ObjectInputStream oi = new ObjectInputStream(fi);
+
+            // Read objects
+            obj = (Object) oi.readObject();
 
             oi.close();
             fi.close();
         } catch (ClassNotFoundException e) {}
         catch (IOException e) {
-            System.out.println("File read error");
+            System.out.println("File read error" + e);
         }
         return obj;
     }

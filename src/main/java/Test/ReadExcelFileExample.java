@@ -53,7 +53,7 @@ public class ReadExcelFileExample {
                 //iterating over each row
                 while (rowIterator.hasNext()) {
  
-                    Student student = new Student();
+//                    Student student = new Student();
                     Row row = (Row) rowIterator.next();
                     Iterator cellIterator = row.cellIterator();
  
@@ -63,28 +63,28 @@ public class ReadExcelFileExample {
                         Cell cell = (Cell) cellIterator.next();
                         //The Cell Containing String will is name.
                         if (Cell.CELL_TYPE_STRING == cell.getCellType()) {
-                            student.setName(cell.getStringCellValue());
+//                            student.setName(cell.getStringCellValue());
  
                             //The Cell Containing numeric value will contain marks
                         } else if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
  
                             //Cell with index 1 contains marks in Maths
                             if (cell.getColumnIndex() == 1) {
-                                student.setMaths(String.valueOf(cell.getNumericCellValue()));
+//                                student.setMaths(String.valueOf(cell.getNumericCellValue()));
                             }
                             //Cell with index 2 contains marks in Science
                             else if (cell.getColumnIndex() == 2) {
 
-                                student.setScience(String.valueOf(cell.getNumericCellValue()));
+//                                student.setScience(String.valueOf(cell.getNumericCellValue()));
                             }
                             //Cell with index 3 contains marks in English
                             else if (cell.getColumnIndex() == 3) {
-                                student.setEnglish(String.valueOf(cell.getNumericCellValue()));
+//                                student.setEnglish(String.valueOf(cell.getNumericCellValue()));
                             }
                         }
                     }
                     //end iterating a row, add all the elements of a row in list
-                    list.add(student);
+//                    list.add(student);
                 }
             }
  
@@ -95,7 +95,7 @@ public class ReadExcelFileExample {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return studentList;
+        return null;
     }
   
 }
