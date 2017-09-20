@@ -7,7 +7,7 @@ package Encryption;
 
 /**
  *
- * @author mehdi
+ * @author max
  */
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -16,7 +16,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
 
 public class AES {
-    public static String encrypt(String key, String initVector, String value) {
+    public  String encrypt(String key, String initVector, String value) {
         try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
@@ -36,7 +36,7 @@ public class AES {
         return null;
     }
 
-    public static String decrypt(String key, String initVector, String encrypted) {
+    public  String decrypt(String key, String initVector, String encrypted) {
         try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
@@ -45,7 +45,6 @@ public class AES {
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
 
             byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
-            
 
             return new String(original);
         } catch (Exception ex) {
@@ -59,7 +58,11 @@ public class AES {
         String key = "Bar12345Bar12345"; // 128 bit key
         String initVector = "RandomInitVector"; // 16 bytes IV
 
-        System.out.println(decrypt(key, initVector,
-                encrypt(key, initVector, "Mehdi Ali Soltani")));
+        AES encAl = new AES();
+        String en = encAl.encrypt(key, initVector, "Hello World  \n"
+                + "mehdi\n"
+                + "ali soltani");
+        System.out.println( en);
+        System.out.println(encAl.decrypt(key, initVector,en));
     }
 }
