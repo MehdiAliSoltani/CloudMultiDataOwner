@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package POGO;
+package POJO;
 
 import Encryption.AES;
 import Encryption.RandomKeyGenerator;
@@ -97,13 +97,13 @@ public class Utils {
         String descr
                 = aes.encrypt(ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, description);
         SysFile sysFile
-                = new SysFile(fileId, fileNameDisk, fileNameSys, descr, permission, owner);
+                = new SysFile(fileId, fileNameDisk, fileNameSys, descr,  owner);
         ft.insertFile(sysFile);
     }
 
     // this method is used when a user want to upload new file into the cloud storage
     public void fileUploadNew(File file, String key, String pathToSave,
-            String description, int permission, Member owner) {
+            String description, Member owner) {
 
         AES aes = new AES();
         //read content of a  file into a string
@@ -148,7 +148,7 @@ public class Utils {
         String descr
                 = aes.encrypt(ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, description);
         SysFile sysFile
-                = new SysFile(fileId, fileNameDisk, fileNameSys, descr, permission, owner);
+                = new SysFile(fileId, fileNameDisk, fileNameSys, descr,  owner);
         ft.insertFile(sysFile);
         ConstAndVars.CURRENT_USER.addKey(new FileKey(fileId, key));
     }
@@ -207,7 +207,7 @@ public class Utils {
         content = aes.decrypt(key, ConstAndVars.initVector, content);
         String fileName = aes.decrypt(ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, sysFile.getFileNameSys());
         try {
-            File newTextFile = new File(path  + sfile.getOwner().getUserName() + fileName);
+            File newTextFile = new File(path  + sfile.getCreator().getUserName() + fileName);
 
             FileWriter fw = new FileWriter(newTextFile);
             fw.write(content);
@@ -295,7 +295,7 @@ public class Utils {
     public String getFileOwner(int fileId) {
         for (SysFile sysFile : FileTable.fileList) {
             if (sysFile.getFileId() == fileId) {
-                return sysFile.getOwner().getUserName();
+                return sysFile.getCreator().getUserName();
             }
         }
         return "NO";
@@ -313,7 +313,7 @@ public class Utils {
     public String getSecretKey(int fileId) {
         for (SysFile sysFile : FileTable.fileList) {
             if (sysFile.getFileId() == fileId) {
-                return sysFile.getOwner().getKey(fileId);
+                return sysFile.getCreator().getKey(fileId);
             }
         }
         return null;

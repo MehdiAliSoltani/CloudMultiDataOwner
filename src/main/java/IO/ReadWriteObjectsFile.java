@@ -5,7 +5,7 @@
  */
 package IO;
 
-import POGO.Member;
+import POJO.Member;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -50,7 +50,7 @@ public class ReadWriteObjectsFile {
             System.out.println("Class not found");
         }
         catch (IOException e) {
-            System.out.println("File+ "+ fileName+ " read error" + e);
+            System.out.println("File read error" + e);
         }
         return obj;
     }

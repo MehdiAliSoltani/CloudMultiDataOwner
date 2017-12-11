@@ -6,12 +6,12 @@
 package ADGUI;
 
 import Encryption.AES;
-import POGO.ConstAndVars;
-import POGO.FileTable;
-import POGO.MailBox;
-import POGO.Member;
-import POGO.SysFile;
-import POGO.Utils;
+import POJO.ConstAndVars;
+import POJO.FileTable;
+import POJO.Mail;
+import POJO.Member;
+import POJO.SysFile;
+import POJO.Utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -163,7 +163,7 @@ public class Search extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-        if (jTextArea1.getText().equals("") && jTextField1.getText().equals("")) {
+       
             String fileName = jTextField1.getText();
             String description = jTextArea1.getText();
 
@@ -232,9 +232,9 @@ public class Search extends javax.swing.JFrame {
                 obj[3] = ls.get(3);
                 tm.insertRow(i++, obj);
             }
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "file name or description should not be empty.");
-        }
+//        } else {
+//            JOptionPane.showMessageDialog(rootPane, "file name or description should not be empty.");
+//        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -243,8 +243,8 @@ public class Search extends javax.swing.JFrame {
         for (SysFile sysFile : FileTable.fileList) {
             if (sysFile.getFileId() == fileId) {
                 int mailId = ConstAndVars.MAILBOX.size() + 1;
-                MailBox mailBox = new MailBox(mailId, ConstAndVars.CURRENT_USER.getUserId(),
-                        sysFile.getOwner().getUserId(), ConstAndVars.REQUEST_TO_DOWNLOAD, fileId);
+                Mail mailBox = new Mail(mailId, ConstAndVars.CURRENT_USER.getUserId(),
+                        sysFile.getCreator().getUserId(), ConstAndVars.REQUEST_TO_DOWNLOAD, fileId);
                 ConstAndVars.MAILBOX.add(mailBox);
                 JOptionPane.showMessageDialog(rootPane, "Your request sent to file owner,");
                 break;
@@ -268,7 +268,7 @@ public class Search extends javax.swing.JFrame {
                             break;
                         }
                     }
-                    MailBox mailBox = new MailBox(mailId, ConstAndVars.CURRENT_USER.getUserId(),
+                    Mail mailBox = new Mail(mailId, ConstAndVars.CURRENT_USER.getUserId(),
                             manager.getUserId(), ConstAndVars.REQUEST_TO_EDIT, fileId);
 //                for(Member mem: ConstAndVars.USERS){
 //                    if(mem.getGroup().getGroupType() == ConstAndVars.MANAGERS){

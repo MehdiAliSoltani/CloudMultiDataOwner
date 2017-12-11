@@ -6,10 +6,10 @@
 package ADGUI;
 
 import IO.ReadWriteObjectsFile;
-import POGO.ConstAndVars;
-import POGO.FileTable;
-import POGO.MailBox;
-import POGO.Member;
+import POJO.ConstAndVars;
+import POJO.FileTable;
+import POJO.Mail;
+import POJO.Member;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -154,9 +154,9 @@ public class LoginPage extends javax.swing.JFrame {
 //                JOptionPane.showMessageDialog(rootPane, "Logged in successfully");
                 login = true;
                 ConstAndVars.CURRENT_USER = gm;
-                ConstAndVars.RECIEVED_MAILS = new ArrayList<MailBox>();
+                ConstAndVars.RECIEVED_MAILS = new ArrayList<Mail>();
                //load your unread inbox
-                for(MailBox mb : ConstAndVars.MAILBOX){
+                for(Mail mb : ConstAndVars.MAILBOX){
                     if(mb.getTo() == ConstAndVars.CURRENT_USER.getUserId() && !mb.isRead()){
                         ConstAndVars.RECIEVED_MAILS.add(mb);
                     }

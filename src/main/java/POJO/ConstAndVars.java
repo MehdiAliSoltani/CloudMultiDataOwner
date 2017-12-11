@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package POGO;
+package POJO;
 
 import IO.ReadWriteObjectsFile;
 import java.io.File;
@@ -65,11 +65,11 @@ public class ConstAndVars {
     /*
     MAILBOX is the mail server of the system
     */
-    public static List<MailBox> MAILBOX;
+    public static List<Mail> MAILBOX;
     /**
      * RECIEVED_MAILS is the unread mails of every users
      */
-    public static List<MailBox> RECIEVED_MAILS;
+    public static List<Mail> RECIEVED_MAILS;
 //    public static List<> MAILBOX;
     private ReadWriteObjectsFile rwFile;
 
@@ -104,9 +104,9 @@ public class ConstAndVars {
         }
         path = Paths.get(MAIL_FILE);
         if (MAILBOX == null && Files.exists(path)) {
-            MAILBOX = (List<MailBox>) (List) rwFile.readFile(MAIL_FILE);
+            MAILBOX = (List<Mail>) (List) rwFile.readFile(MAIL_FILE);
         } else {
-            MAILBOX = new ArrayList<MailBox>();
+            MAILBOX = new ArrayList<Mail>();
         }
         path = Paths.get(REQUEST_ROLE_FILE);
         if (REQUEST_ROLE == null && Files.exists(path)) {

@@ -6,8 +6,8 @@
 package ADGUI;
 
 import Encryption.RandomKeyGenerator;
-import POGO.ConstAndVars;
-import POGO.Member;
+import POJO.ConstAndVars;
+import POJO.Member;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 

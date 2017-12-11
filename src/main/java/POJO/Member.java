@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package POGO;
+package POJO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class Member implements Serializable {
     
     
     protected Member usr;
-    private List<FileKey> memberKey = null;
+    private List<FileKey> userFileKeys = null;
 
 
     public Member(int userId, String userName, String password, String email,
@@ -35,8 +35,8 @@ public class Member implements Serializable {
         this.password = password;
         this.email = email;
         this.emailPassword = emailPassword;
-       if (memberKey == null) {
-            memberKey = new ArrayList<FileKey>();
+       if (userFileKeys == null) {
+            userFileKeys = new ArrayList<FileKey>();
         }
     }
     
@@ -91,11 +91,11 @@ public class Member implements Serializable {
 
 
     public void addKey(FileKey key){
-        memberKey.add(key);
+        userFileKeys.add(key);
     }
     
     public String getKey(int fileId){
-        for(FileKey fk : memberKey){
+        for(FileKey fk : userFileKeys){
             if(fk.getFileId() == fileId){
                 return fk.getKey();
             }
@@ -104,9 +104,9 @@ public class Member implements Serializable {
     }
     
     public void deleteKey(int fileId){
-        for(FileKey fk : memberKey){
+        for(FileKey fk : userFileKeys){
             if(fk.getFileId() == fileId){
-                memberKey.remove(fk);
+                userFileKeys.remove(fk);
                 break;
             }
         }       

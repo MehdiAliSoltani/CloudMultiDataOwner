@@ -5,9 +5,9 @@
  */
 package ADGUI;
 
-import POGO.ConstAndVars;
-import POGO.Member;
-import POGO.RoleChange;
+import POJO.ConstAndVars;
+import POJO.Member;
+import POJO.RoleChange;
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;

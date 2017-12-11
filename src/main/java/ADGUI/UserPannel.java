@@ -7,11 +7,11 @@ package ADGUI;
 
 
 
-import POGO.ConstAndVars;
-import POGO.FileTable;
-import POGO.MailBox;
-import POGO.SysFile;
-import POGO.Utils;
+import POJO.ConstAndVars;
+import POJO.FileTable;
+import POJO.Mail;
+import POJO.SysFile;
+import POJO.Utils;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -262,7 +262,7 @@ public class UserPannel extends javax.swing.JFrame {
         tm.setRowCount(0);
         int i = 0;
 
-        for (MailBox mb : ConstAndVars.RECIEVED_MAILS) {
+        for (Mail mb : ConstAndVars.RECIEVED_MAILS) {
 
             obj[0] = mb.getId();
             obj[1] = mb.getFileId();
@@ -289,13 +289,13 @@ public class UserPannel extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int mailId = Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString());
-        for (MailBox mb : ConstAndVars.MAILBOX) {
+        for (Mail mb : ConstAndVars.MAILBOX) {
             if (mb.getId() == mailId && mb.isRead() == false) {
                 mb.setRead(true);
 //                mb.setVerify(true);
                 int to = mb.getFrom();
                 int fileId = mb.getFileId();
-                MailBox mBox = new MailBox(ConstAndVars.MAILBOX.size() + 1,
+                Mail mBox = new Mail(ConstAndVars.MAILBOX.size() + 1,
                         ConstAndVars.CURRENT_USER.getUserId(),
                         to, ConstAndVars.ACCEPT_DOWNLOAD, fileId);
                 mBox.setVerify(true);
@@ -349,11 +349,11 @@ public class UserPannel extends javax.swing.JFrame {
         int mailId = Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString());
         for (SysFile sf : FileTable.fileList) {
             if (sf.getFileId() == fileId) {
-                for (MailBox mb : ConstAndVars.MAILBOX) {
+                for (Mail mb : ConstAndVars.MAILBOX) {
                     if (mb.getId() == mailId && mb.isVerify() && mb.getAction() == ConstAndVars.ACCEPT_DOWNLOAD) {
                         mb.setRead(true);
                         Utils util = new Utils();
-                        util.downloadFileOthers(sf, sf.getOwner(), mb.getSecretKey());
+                        util.downloadFileOthers(sf, sf.getCreator(), mb.getSecretKey());
                         JOptionPane.showMessageDialog(rootPane, "Downloading...");
                     }
                 }
@@ -365,7 +365,7 @@ public class UserPannel extends javax.swing.JFrame {
         if (ConstAndVars.CURRENT_USER.getGroup().getGroupType() == ConstAndVars.MANAGERS) {
 
             int mailId = Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString());
-            for (MailBox mb : ConstAndVars.MAILBOX) {
+            for (Mail mb : ConstAndVars.MAILBOX) {
                 if (mb.getId() == mailId && mb.isRead() == false) {
                     mb.setRead(true);
                     //get a manager
@@ -384,7 +384,7 @@ public class UserPannel extends javax.swing.JFrame {
 //                    } else {
 //                        to = mb.getFrom();
 //                    }
-                    MailBox mBox = new MailBox(ConstAndVars.MAILBOX.size() + 1,
+                    Mail mBox = new Mail(ConstAndVars.MAILBOX.size() + 1,
                             ConstAndVars.CURRENT_USER.getUserId(),
                             to, ConstAndVars.ACCEPT_EDIT, fileId);
                     mBox.setVerify(true);
@@ -407,14 +407,14 @@ public class UserPannel extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         //check you have edit permissions
-        for (MailBox mb : ConstAndVars.RECIEVED_MAILS) {
+        for (Mail mb : ConstAndVars.RECIEVED_MAILS) {
             if (mb.getAction() == ConstAndVars.ACCEPT_EDIT && mb.isRead() == false) {
                 int fileId = Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString());
                 mb.setRead(true);               
                 for (SysFile sfile : FileTable.fileList) {
                     if (sfile.getFileId() == fileId) {
                         Utils util = new Utils();
-                        jTextArea1.setText(util.showContent(fileId, sfile.getOwner()));
+                        jTextArea1.setText(util.showContent(fileId, sfile.getCreator()));
                         break;
                     }
 
@@ -428,7 +428,7 @@ public class UserPannel extends javax.swing.JFrame {
         for (SysFile sfile : FileTable.fileList) {
             if (sfile.getFileId() == fileId) {
                 Utils util = new Utils();
-                util.updateFile(sfile, sfile.getOwner(), jTextArea1.getText(), ConstAndVars.HOME_DIR);
+                util.updateFile(sfile, sfile.getCreator(), jTextArea1.getText(), ConstAndVars.HOME_DIR);
                 JOptionPane.showMessageDialog(rootPane, "Your selected file has changed.");
                 break;
             }

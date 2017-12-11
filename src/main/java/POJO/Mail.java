@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package POGO;
+package POJO;
 
 import java.io.Serializable;
 
@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @author max
  * This class is a structure of a Mail
  */
-public class MailBox  implements Serializable{
+public class Mail  implements Serializable{
     private int id;
     private int from;
     private int to;
@@ -22,7 +22,7 @@ public class MailBox  implements Serializable{
     private boolean verify;
     private String secretKey;
 
-    public MailBox(int id,int from, int to, int mail, int fileId) {
+    public Mail(int id,int from, int to, int mail, int fileId) {
         this.id = id;
         this.from = from;
         this.to = to;

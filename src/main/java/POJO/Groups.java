@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package POGO;
+package POJO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.List;
 public class Groups implements Serializable{
 
     private int groupId;
-    private int groupType; // 1 = owner 2= writer 3= manager
+    private int groupType; // 1 = owner 2= writer 3= manager 
     private List<Member> groupMember = new ArrayList<Member>();
 
     public Groups(int groupId, int groupType) {

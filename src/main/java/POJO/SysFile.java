@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package POGO;
+package POJO;
 
 import java.io.Serializable;
 
@@ -18,18 +18,18 @@ public class SysFile implements Serializable{
     private String fileNameDisk;
     private String fileNameSys;
     private String description;
-    private int permission; //DWS-DWS-DWS owner-group-other ; write-download-search
-    private Member owner;
+    
+    private Member creator;
     private int rankSerch;
 
     public SysFile(int fileId, String fileNameDisk, String fileNameSys, String description, 
-            int permission, Member owner) {
+             Member owner) {
         this.fileId = fileId;
         this.fileNameDisk = fileNameDisk;
         this.fileNameSys = fileNameSys;
         this.description = description;
-        this.permission = permission;
-        this.owner = owner;
+        
+        this.creator = owner;
     }
 
     public int getFileId() {
@@ -64,20 +64,13 @@ public class SysFile implements Serializable{
         this.description = description;
     }
 
-    public int getPermission() {
-        return permission;
+
+    public Member getCreator() {
+        return creator;
     }
 
-    public void setPermission(int permission) {
-        this.permission = permission;
-    }
-
-    public Member getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Member owner) {
-        this.owner = owner;
+    public void setCreator(Member creator) {
+        this.creator = creator;
     }
 
     public int getRankSerch() {

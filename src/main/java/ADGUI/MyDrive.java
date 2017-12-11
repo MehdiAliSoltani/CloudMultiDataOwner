@@ -6,10 +6,10 @@
 package ADGUI;
 
 import Encryption.AES;
-import POGO.ConstAndVars;
-import POGO.FileTable;
-import POGO.SysFile;
-import POGO.Utils;
+import POJO.ConstAndVars;
+import POJO.FileTable;
+import POJO.SysFile;
+import POJO.Utils;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
@@ -184,7 +184,7 @@ public class MyDrive extends javax.swing.JFrame {
         int i = 0;
         List<List<String>> tmTable = new ArrayList<List<String>>();
         for (SysFile sysFile : FileTable.fileList) {
-            if (sysFile.getOwner().getUserId() == ConstAndVars.CURRENT_USER.getUserId()) {
+            if (sysFile.getCreator().getUserId() == ConstAndVars.CURRENT_USER.getUserId()) {
                 List<String> ls = new ArrayList<String>();
 
                 ls.add("" + sysFile.getFileId());
@@ -192,8 +192,8 @@ public class MyDrive extends javax.swing.JFrame {
                         ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, sysFile.getFileNameSys()));
                 ls.add(aes.decrypt(
                         ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, sysFile.getDescription()));
-                ls.add(Integer.toBinaryString(sysFile.getPermission()));
-                tmTable.add(ls);
+//                ls.add(Integer.toBinaryString(sysFile.getPermission()));
+//                tmTable.add(ls);
 
             }
         }
@@ -202,7 +202,7 @@ public class MyDrive extends javax.swing.JFrame {
             obj[0] = ls.get(0);
             obj[1] = ls.get(1);
             obj[2] = ls.get(2);
-            obj[3] = ls.get(3);
+//            obj[3] = ls.get(3);
             tm.insertRow(i++, obj);
         }
     }//GEN-LAST:event_formWindowActivated
@@ -221,7 +221,7 @@ public class MyDrive extends javax.swing.JFrame {
         int fileId = Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString());
         SysFile sysFile;
         for (SysFile sfile : FileTable.fileList) {
-            if (ConstAndVars.CURRENT_USER.getUserId() == sfile.getOwner().getUserId()) {
+            if (ConstAndVars.CURRENT_USER.getUserId() == sfile.getCreator().getUserId()) {
                 Utils util = new Utils();
                 jTextArea1.setText(util.showContent(fileId, ConstAndVars.CURRENT_USER));
                 break;
@@ -237,7 +237,7 @@ public class MyDrive extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int fileId = Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString());
         for (SysFile sfile : FileTable.fileList) {
-            if (ConstAndVars.CURRENT_USER.getUserId() == sfile.getOwner().getUserId()) {
+            if (ConstAndVars.CURRENT_USER.getUserId() == sfile.getCreator().getUserId()) {
                 Utils util = new Utils();
                 util.downloadFile(fileId, ConstAndVars.CURRENT_USER);
                 JOptionPane.showMessageDialog(rootPane, "The file with id " + sfile.getFileId() + " has been downloaded");
@@ -264,7 +264,7 @@ public class MyDrive extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         int fileId = Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString());
         for (SysFile sfile : FileTable.fileList) {
-            if (ConstAndVars.CURRENT_USER.getUserId() == sfile.getOwner().getUserId()) {
+            if (ConstAndVars.CURRENT_USER.getUserId() == sfile.getCreator().getUserId()) {
                 Utils util = new Utils();
                 util.deleteFile(fileId, ConstAndVars.CURRENT_USER);
                 JOptionPane.showMessageDialog(rootPane, "The file with id " + sfile.getFileId() + " is deleted");

@@ -5,10 +5,11 @@
  */
 package ADGUI;
 
-import POGO.ConstAndVars;
-import POGO.RoleChange;
+import POJO.ConstAndVars;
+import POJO.RoleChange;
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -114,6 +115,7 @@ public class RequestToAdmin extends javax.swing.JFrame {
         }
         RoleChange rc = new RoleChange(ConstAndVars.CURRENT_USER, role);
         ConstAndVars.REQUEST_ROLE.add(rc);
+        JOptionPane.showMessageDialog(rootPane, "Your request sent to admin");
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
