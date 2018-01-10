@@ -72,6 +72,7 @@ public class ConstAndVars {
     public static List<Mail> RECIEVED_MAILS;
 //    public static List<> MAILBOX;
     private ReadWriteObjectsFile rwFile;
+    public static List<Query> queryList = new ArrayList<Query>();
 
     public ConstAndVars() {
         getPath();

@@ -196,13 +196,13 @@ public class LoginPage extends javax.swing.JFrame {
         rw.writeFile(ConstAndVars.MAILBOX, ConstAndVars.MAIL_FILE);
         rw.writeFile(FileTable.fileList, ConstAndVars.FILE_TABLE);
         rw.writeFile(ConstAndVars.REQUEST_ROLE, ConstAndVars.REQUEST_ROLE_FILE);
-        
+   /*     
         JOptionPane.showMessageDialog(rootPane, "Users has been writen into " + ConstAndVars.USER_FILE);
         JOptionPane.showMessageDialog(rootPane, "Groups has been writen into " + ConstAndVars.GROUP_FILE);
         JOptionPane.showMessageDialog(rootPane, "Mails has been writen into " + ConstAndVars.MAIL_FILE);
         JOptionPane.showMessageDialog(rootPane, "File Table has been writen into " + ConstAndVars.FILE_TABLE);
         JOptionPane.showMessageDialog(rootPane, "Role change requests has been writen into " + ConstAndVars.REQUEST_ROLE_FILE);
-
+*/
     }//GEN-LAST:event_formWindowClosing
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed

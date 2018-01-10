@@ -72,8 +72,8 @@ public class Utils {
         }
         final String content = sb.toString();
         //two level encryption
-        String stage1 = aes.encrypt(userKey, ConstAndVars.initVector, content);
-        String stage2 = aes.encrypt(groupKey, ConstAndVars.initVector, stage1);
+        String stage1 = aes.encryptText(userKey, ConstAndVars.initVector, content);
+        String stage2 = aes.encryptText(groupKey, ConstAndVars.initVector, stage1);
 
         //encrypt file name 
         //this is done by cloud server
@@ -97,7 +97,7 @@ public class Utils {
         String descr
                 = aes.encrypt(ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, description);
         SysFile sysFile
-                = new SysFile(fileId, fileNameDisk, fileNameSys, descr,  owner);
+                = new SysFile(fileId, fileNameDisk, fileNameSys, descr, owner);
         ft.insertFile(sysFile);
     }
 
@@ -110,28 +110,39 @@ public class Utils {
         final String EoL = System.getProperty("line.separator");
         //convert file to string 
         List<String> lines = null;
+        byte[] encoded = null;
         try {
-            lines = Files.readAllLines(Paths.get(file.getPath()),
-                    Charset.defaultCharset());
+            
+//            lines = Files.readAllLines(Paths.get(file.getPath()),
+//                    Charset.defaultCharset());
+            
+            encoded = Files.readAllBytes(Paths.get(file.getPath()));
+            
         } catch (IOException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         StringBuilder sb = new StringBuilder();
-        for (String line : lines) {
-            sb.append(line).append(EoL);
-        }
-        final String content = sb.toString();
+/*        for (String line : lines) {
+//            sb.append(line).append(EoL);
+            sb.append(line);//.append(EoL);
+        }*/
+        
+//        final String content = sb.toString();
+        final String content = new String(encoded);
+//        System.out.println("contents:"+content);
         //Encrypt file with a user's key
-        String stage1 = aes.encrypt(key, ConstAndVars.initVector, content);
-
+//        String stage1 = aes.encryptText(key, ConstAndVars.initVector, content);
+        String stage1 = aes.encryptText(ConstAndVars.CURRENT_USER.getKey(), ConstAndVars.initVector, content);
+        System.out.println("Key:"+ConstAndVars.CURRENT_USER.getKey());
+        System.out.println(Utils.class.getName());
+//        System.out.println(stage1);
         //encrypt file name 
         //this is done by cloud server
         String fileNameDisk = RandomKeyGenerator.generateFileName(50);
         String fileNameSys
                 = aes.encrypt(ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, file.getName());
-        String dec = aes.decrypt(key, ConstAndVars.initVector, stage1);
-        // Store file into the storage
+
         try {
             File newTextFile = new File(pathToSave + fileNameDisk + ".txt");
 
@@ -148,7 +159,7 @@ public class Utils {
         String descr
                 = aes.encrypt(ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, description);
         SysFile sysFile
-                = new SysFile(fileId, fileNameDisk, fileNameSys, descr,  owner);
+                = new SysFile(fileId, fileNameDisk, fileNameSys, descr, owner);
         ft.insertFile(sysFile);
         ConstAndVars.CURRENT_USER.addKey(new FileKey(fileId, key));
     }
@@ -156,7 +167,8 @@ public class Utils {
     public void downloadFile(int fileId, Member member) {
         String path = ConstAndVars.HOME_DIR;
         AES aes = new AES();
-        String key = member.getKey(fileId);
+//        String key = member.getKey(fileId);
+        String key = member.getKey();
         SysFile sysFile = null;
         for (SysFile sFile : FileTable.fileList) {
             if (sFile.getFileId() == fileId) {
@@ -174,8 +186,8 @@ public class Utils {
             e.printStackTrace();
         }
 
-        content = aes.decrypt(key, ConstAndVars.initVector, content);
-        String fileName = aes.decrypt(ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, sysFile.getFileNameSys());
+        content = aes.decryptText(key, ConstAndVars.initVector, content);
+        String fileName = aes.decryptText(ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, sysFile.getFileNameSys());
         try {
             File newTextFile = new File(path + "/10" + fileName);
 
@@ -204,10 +216,10 @@ public class Utils {
             e.printStackTrace();
         }
 
-        content = aes.decrypt(key, ConstAndVars.initVector, content);
-        String fileName = aes.decrypt(ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, sysFile.getFileNameSys());
+        content = aes.decryptText(key, ConstAndVars.initVector, content);
+        String fileName = aes.decryptText(ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, sysFile.getFileNameSys());
         try {
-            File newTextFile = new File(path  + sfile.getCreator().getUserName() + fileName);
+            File newTextFile = new File(path + sfile.getCreator().getUserName() + fileName);
 
             FileWriter fw = new FileWriter(newTextFile);
             fw.write(content);
@@ -222,7 +234,8 @@ public class Utils {
     public String showContent(int fileId, Member member) {
         String path = ConstAndVars.HOME_DIR;
         AES aes = new AES();
-        String key = member.getKey(fileId);
+//        String key = member.getKey(fileId);
+        String key = member.getKey();
         SysFile sysFile = null;
         for (SysFile sFile : FileTable.fileList) {
             if (sFile.getFileId() == fileId) {
@@ -231,7 +244,7 @@ public class Utils {
             }
         }
         String content = null;
-        File file = new File(path +  sysFile.getFileNameDisk() + ".txt");
+        File file = new File(path + sysFile.getFileNameDisk() + ".txt");
         try {
             byte[] bytes = Files.readAllBytes(file.toPath());
 
@@ -240,7 +253,7 @@ public class Utils {
             e.printStackTrace();
         }
 
-        content = aes.decrypt(key, ConstAndVars.initVector, content);
+        content = aes.decryptText(key, ConstAndVars.initVector, content);
         return content;
     }
 
@@ -248,16 +261,17 @@ public class Utils {
 
         AES aes = new AES();
         int fileId = sysFile.getFileId();
-        String key = owner.getKey(fileId);
+//        String key = owner.getKey(fileId);
+        String key = owner.getKey();
         //two level encryption
-        String stage1 = aes.encrypt(key, ConstAndVars.initVector, fileContent);
+        String stage1 = aes.encryptText(key, ConstAndVars.initVector, fileContent);
 
         //encrypt file name 
         //this is done by cloud server
         String fileNameDisk = sysFile.getFileNameDisk();
 //        String fileNameSys = sysFile.getFileNameSys();
-//                = aes.encrypt(ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, file.getName());
-//        String dec = aes.decrypt(key, ConstAndVars.initVector, stage1);
+//                = aes.encryptText(ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, file.getName());
+//        String dec = aes.decryptText(key, ConstAndVars.initVector, stage1);
         try {
             File newTextFile = new File(path + fileNameDisk + ".txt");
 
@@ -313,9 +327,24 @@ public class Utils {
     public String getSecretKey(int fileId) {
         for (SysFile sysFile : FileTable.fileList) {
             if (sysFile.getFileId() == fileId) {
-                return sysFile.getCreator().getKey(fileId);
+//                return sysFile.getCreator().getKey(fileId);
+                return sysFile.getCreator().getKey();
             }
         }
         return null;
+    }
+
+    public void broadcastSearch(int applicantId, String keyWord) {
+        AES aes = new AES();
+        for (Member mem : ConstAndVars.USERS) {
+            if (!mem.getUserName().equals("admin")) {
+//                System.out.println("mem.getKey():"+mem.getKey());
+                String encKeyWord = aes.encrypt(mem.getKey(), ConstAndVars.initVector, keyWord);
+//                System.out.println(encKeyWord);
+                String decKeyWord = aes.decrypt(mem.getKey(), ConstAndVars.initVector, encKeyWord);
+//                System.out.println(decKeyWord);
+                ConstAndVars.queryList.add(new Query(mem.getUserId(), applicantId, encKeyWord));
+            }
+        }
     }
 }

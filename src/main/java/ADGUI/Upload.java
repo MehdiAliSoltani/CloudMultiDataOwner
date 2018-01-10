@@ -121,7 +121,7 @@ public class Upload extends javax.swing.JFrame {
         AES aes = new AES();
         String fileName = jTextField1.getText();
         File file = new File(fileName);
-//        String fileDesc = aes.encrypt(
+//        String fileDesc = aes.encryptText(
 //                ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector,jTextArea1.getText());
         String fileDesc = jTextArea1.getText();
         

@@ -6,10 +6,12 @@
 package ADGUI;
 
 import Encryption.AES;
+import IO.RatingSearch;
 import POJO.ConstAndVars;
 import POJO.FileTable;
 import POJO.Mail;
 import POJO.Member;
+import POJO.Query;
 import POJO.SysFile;
 import POJO.Utils;
 import java.util.ArrayList;
@@ -34,6 +36,8 @@ public class Search extends javax.swing.JFrame {
     public Search() {
         initComponents();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        jLabel2.setVisible(false);
+        jTextArea1.setVisible(false);
 
     }
 
@@ -59,7 +63,7 @@ public class Search extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("file name");
+        jLabel1.setText("keyword");
 
         jLabel2.setText("file description");
 
@@ -163,78 +167,85 @@ public class Search extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-       
-            String fileName = jTextField1.getText();
-            String description = jTextArea1.getText();
+        RatingSearch rs = new RatingSearch();
+        String keyWord = jTextField1.getText();
+        String description = jTextArea1.getText();
+        //broadcast query to all users
 
-            AES aes = new AES();
-            for (SysFile sysFile : FileTable.fileList) {
-                String fn = aes.decrypt(ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, sysFile.getFileNameSys());
-                String des = aes.decrypt(ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, sysFile.getDescription());
-                if (fn.equals(fileName) || des.toUpperCase().contains(description.toUpperCase())) {
-                    sysFile.setRankSerch(sysFile.getRankSerch() + 1);
-                    tmpList.add(sysFile);
+        Utils util = new Utils();
+        util.broadcastSearch(ConstAndVars.CURRENT_USER.getUserId(), keyWord);
+        AES aes = new AES();
+        for (SysFile sysFile : FileTable.fileList) {
+            for (Query q : ConstAndVars.queryList) {
+                if (sysFile.getCreator().getUserId() == q.getOwnerId()) {
+                    int numAccurence = rs.findPatternInFile(q.getEncryptedKeyword(), sysFile.getFileNameDisk());
+                    System.out.println("numAcc:" + numAccurence);
+                    System.out.println(q.getEncryptedKeyword());
+                    sysFile.setRankSerch(numAccurence);
+                    if (sysFile.getRankSerch() > 0) {
+                        tmpList.add(sysFile);
+                    }
+
                 }
             }
-
-            //sort a files based on rank
-            Collections.sort(tmpList, new Comparator<SysFile>() {
-                @Override
-                public int compare(SysFile o1, SysFile o2) {
-                    if (o1.getRankSerch() == o2.getRankSerch()) {
-                        return 0;
-                    }
-                    return o1.getRankSerch() < o2.getRankSerch() ? -1 : 1;
+        }
+        ConstAndVars.queryList.removeAll(ConstAndVars.queryList);
+        //sort a files based on rank
+        Collections.sort(tmpList, new Comparator<SysFile>() {
+            @Override
+            public int compare(SysFile o1, SysFile o2) {
+                if (o1.getRankSerch() == o2.getRankSerch()) {
+                    return 0;
                 }
-            });
+                return o1.getRankSerch() > o2.getRankSerch() ? -1 : 1;
+            }
+        });
 //            System.out.println("");
 
-            int groupType = ConstAndVars.CURRENT_USER.getGroup().getGroupType();
-            String groupName = null;
-            switch (groupType) {
-                case ConstAndVars.MANAGERS:
-                    groupName = "Manager";
-                    break;
-                case ConstAndVars.OTHERS:
-                    groupName = "Other";
-                    break;
-                case ConstAndVars.OWNER:
-                    groupName = "Owner";
-                    break;
-                case ConstAndVars.WRITER:
-                    groupName = "Writer";
-                    break;
-            }
+        int groupType = ConstAndVars.CURRENT_USER.getGroup().getGroupType();
+        String groupName = null;
+        switch (groupType) {
+            case ConstAndVars.MANAGERS:
+                groupName = "Manager";
+                break;
+            case ConstAndVars.OTHERS:
+                groupName = "Other";
+                break;
+            case ConstAndVars.OWNER:
+                groupName = "Owner";
+                break;
+            case ConstAndVars.WRITER:
+                groupName = "Writer";
+                break;
+        }
+// show result into grid
+        Object[] obj = new Object[4];
+        DefaultTableModel tm = (DefaultTableModel) jTable1.getModel();
+        tm.setRowCount(0);
+        int i = 0;
+        List<List<String>> tmTable = new ArrayList<List<String>>();
+        for (SysFile sysFile : tmpList) {
+            List<String> ls = new ArrayList<String>();
 
-            Object[] obj = new Object[4];
-            DefaultTableModel tm = (DefaultTableModel) jTable1.getModel();
-            tm.setRowCount(0);
-            int i = 0;
-            List<List<String>> tmTable = new ArrayList<List<String>>();
-            for (SysFile sysFile : tmpList) {
-                List<String> ls = new ArrayList<String>();
+            ls.add("" + sysFile.getFileId());
+            ls.add(aes.decrypt(
+                    ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, sysFile.getFileNameSys()));
+            ls.add(aes.decrypt(
+                    ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, sysFile.getDescription()));
 
-                ls.add("" + sysFile.getFileId());
-                ls.add(aes.decrypt(
-                        ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, sysFile.getFileNameSys()));
-                ls.add(aes.decrypt(
-                        ConstAndVars.CLOUD_SERVER_KEY, ConstAndVars.initVector, sysFile.getDescription()));
-                Utils util = new Utils();
-                ls.add(util.getFileOwner(sysFile.getFileId()));
+            ls.add(util.getFileOwner(sysFile.getFileId()));
 
-                tmTable.add(ls);
-            }
+            tmTable.add(ls);
+        }
 
-            for (List<String> ls : tmTable) {
-                obj[0] = ls.get(0);
-                obj[1] = ls.get(1);
-                obj[2] = ls.get(2);
-                obj[3] = ls.get(3);
-                tm.insertRow(i++, obj);
-            }
-//        } else {
-//            JOptionPane.showMessageDialog(rootPane, "file name or description should not be empty.");
-//        }
+        for (List<String> ls : tmTable) {
+            obj[0] = ls.get(0);
+            obj[1] = ls.get(1);
+            obj[2] = ls.get(2);
+            obj[3] = ls.get(3);
+            tm.insertRow(i++, obj);
+        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

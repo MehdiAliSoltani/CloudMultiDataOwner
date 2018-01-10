@@ -97,7 +97,7 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="file name"/>
+        <Property name="text" type="java.lang.String" value="keyword"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextField1">
